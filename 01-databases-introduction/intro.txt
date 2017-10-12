@@ -1,0 +1,103 @@
+For each of these skills, write pseudo-code (like the post = Post.all.first example above)
+ to demonstrate how your application might perform these tasks through an ORM.
+ For each code sample, also write a corresponding SQL statement.
+
+
+1.  Remove duplicates in a query response
+
+    Pseudo code:
+      unique_user = User.all.unique?
+
+    SQL statement:
+      SELECT DISTINCT name FROM user;
+
+2. Filter records using inequalities, pattern matching, ranges, and boolean logic
+
+    Example 1:
+      Pseudo code:
+        posts_with_less_than_ten_likes = Post.where("like <= ?", 10)
+
+      SQL statement:
+        SELECT * FROM post WHERE like < 10;
+
+    Example 2:
+      Pseudo code:
+        comments_with_a = Comment.all.starts_with('a')
+
+      SQL statement:
+        SELECT * FROM comment WHERE body LIKE 'a%';
+
+    Example 3:
+      Pseudo code:
+        reviewed_posts = Post.where('reviewed == ?', true)
+      SQL statement:
+        SELECT * FROM post WHERE reviewed = true;
+
+3. Sort records in a particular order
+
+    Pseudo code:
+      comment_ascending = Comment.all.sort(id,asc)
+
+    SQL statement:
+      SELECT * FROM comment ORDER BY id ASC;
+
+4. Limit the number of records returned
+
+    Pseudo code:
+      five_users = User.all.sort(id, asc, 5)
+
+    SQL statement:
+      SELECT * FROM user ORDER BY id ASC LIMIT 5;
+
+5. Group records into sections
+
+    Pseudo code:
+      user_comment = Comment.all.group(user_id)
+
+    SQL statement:
+      SELECT user_id, COUNT(*)
+      FROM comment
+      GROUP BY user_id;
+
+6. Perform calculations using aggregate functions
+
+    Pseudo code:
+      number_of_users = User.count
+
+    SQL statement:
+      SELECT COUNT(*) FROM user;
+
+
+7. Join tables using cross join, inner join, and outer join
+    Cross Join:
+
+      Pseudo code:
+        cross_join_user_post = Post.joins(:user)
+
+      SQL statement:
+        SELECT *
+        FROM post
+        CROSS JOIN user
+        ON post.user_id = user.id;
+
+    Inner Join:
+
+      Pseudo code:
+        inner_join_user_post = Post.join.where(user_id: user.id)
+
+      SQL statement:
+        SELECT *
+        FROM post
+        INNER JOIN user
+        ON post.user_id = user.id;
+
+    Outer Join:
+      Pseudo code:
+        outer_join_user_post = Post.leftjoin.where(user.id)
+
+    SQL statement:
+      SELECT post.title AS post, post.year, user.name AS contributor
+      FROM post
+      OUTER JOIN user
+      ON post.user_id = user.id
+      WHERE post.year > 2015;
