@@ -1,0 +1,96 @@
+1. Answer all of these questions. Write at least one paragraph per question.
+  Send your answers to your mentor for review.
+
+A. What's a RubyGem and why would you use one?
+
+  A RubyGem is a full-fledged application, package manager, library or a plug-in used to supplement
+  an application.  The RubyGem will provide some functionality that I will install to fulfill a specific
+  need, such as a testing framework, need to send emails, or convert Markdown to HTML.  Usually gems
+  are used to avoid having to rewrite common code functionality.  This contributes to why Ruby on Rails
+  apps are considered easy to build, deploy, and maintain.  Gems are useful because they can act as
+  modules which can be plugged into a project and add functionality with relative ease and promote
+  best practices as Gems evolve over time through iteration and improve through review and feedback.
+
+B. What's the difference between lazy and eager loading?
+
+  Lazy loading only does calculations and initializes an object if it is required to.  With Eager loading calculations
+  and initialization of objects occur in advance whether that content is specifically needed or not.  Lazy loading
+  can be useful in development as it can allow for faster load times initially by making the program only access
+  what it needs when it needs it.  Eager loading can be appropriate by pre-loading all data which can make for
+  shortened response time later in the sequence.
+
+C. What's the difference between the CREATE TABLE and INSERT INTO SQL statements?
+
+  CREATE TABLE will create the table with the name provided in the command.  On the other hand,
+  INSERT INTO will add data values to the table specified by the command.  CREATE TABLE accepts
+  parameters that specify how many columns will be created.  INSERT INTO adds rows to an
+  existing table.
+
+D. What's the difference between extend and include? When would you use one or the other?
+
+  "extend" adds class methods to an object from a module, while "include" adds instance methods to
+  an object from a module.  If you wanted to change the functionality of the object class itself,
+  then you would use "extend".  If you only want to change the instance of that class, then you
+  would use "include".
+
+E. In persistence.rb, why do the save methods need to be instance (vs. class) methods?
+
+  It is important to set the save methods as instance methods because they need to interact with a
+  particular instance of a class.  The save methods needs to save the database as in individual
+  instance of Bloc Record, not as a part of every instance of Bloc Record.  Therefore, it is important
+  to set the save function as an instance method to only work on that instance of the class, rather
+  than the entire class.
+
+F. Given the Jar-Jar Binks example earlier, what is the final SQL query in persistence.rb's save! method?
+
+  The final SQL query will find the specific record based on it's ID and update the data in the table
+  with the appropriate data from the field value.
+
+G. AddressBook's entries instance variable no longer returns anything.
+  We'll fix this in a later checkpoint. What changes will we need to make?
+
+  Each of the initializers in the AddressBook and the Entry have been removed.  Therefore,
+  as a result, the instance variables used throughout the program are not tied to anything
+  and will result in nil because they were never setup. To fix this, we will have to either
+  re-initialize the instance variables or point those variables to information in the database
+  so that it has a value.
+
+2. Write a Ruby method that converts snake_case to CamelCase using regular expressions (you can test them on Rubular).
+    Send your code to your mentor.
+
+
+    def toCamel(snake_cased_word)
+      string = snake_cased_word.gsub(/\//, '::')
+      string.gsub!(/_/, ' ')
+      return string.split.map(&:capitalize).join('')
+    end
+
+    puts toCamel("make_it_camel_cased")
+
+
+3. Add a select method which takes an attribute and value and searches for all records that match:
+
+    lib/bloc_record/selection.rb
+
+      def find_by(attribute, value)
+        # work here
+      end
+
+ Assuming you have an AddressBook, it might get called like this:
+
+    myAddressBook = AddressBook.find_by("name", "My Address Book")
+    Your code should use a SELECT…WHERE SQL query and return an array of objects to the caller.
+    Send your code to your mentor.
+
+
+
+      Answer:
+
+          def find_by(attribute, value)
+            row = connection.get_first_row <<-SQL
+              SELECT #{columns.join ","} FROM #{table}
+              WHERE #{attribute} = #{BlocRecord::Utility.sql_strings(value)};
+            SQL
+
+            init_object_from_row(row)
+          end
